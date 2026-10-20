@@ -16,7 +16,6 @@ edition = "2024"
 rust-version = "1.85"
 license = "MIT"
 repository = "https://github.com/lakhiwal007/jsyaml-rs"
-homepage = "https://github.com/lakhiwal007/jsyaml-rs"
 keywords = ["yaml", "parser", "js-yaml", "napi", "wasm"]
 categories = ["encoding", "parser-implementations"]
 

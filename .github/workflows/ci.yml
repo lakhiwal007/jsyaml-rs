@@ -149,5 +149,9 @@ jobs:
         with:
           node-version: 22
       - run: node scripts/fuzz-seed.mjs
-      - run: cargo +nightly fuzz run load fuzz/corpus/load -- -max_total_time=60
-      - run: cargo +nightly fuzz run fast_path fuzz/corpus/fast_path -- -max_total_time=60
+      # The prebuilt cargo-fuzz is a static musl binary and would default to building for
+      # x86_64-unknown-linux-musl, where AddressSanitizer can't run: build for the host.
+      - run: |
+          echo "FUZZ_TARGET=$(rustc +nightly -vV | sed -n 's/^host: //p')" >> "$GITHUB_ENV"
+      - run: cargo +nightly fuzz run --target "$FUZZ_TARGET" load fuzz/corpus/load -- -max_total_time=60
+      - run: cargo +nightly fuzz run --target "$FUZZ_TARGET" fast_path fuzz/corpus/fast_path -- -max_total_time=60
