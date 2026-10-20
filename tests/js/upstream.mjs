@@ -7,6 +7,7 @@
 import { execFileSync, spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const root = path.join(import.meta.dirname, '../..')
 const pkg = path.resolve(process.argv[2] ?? '')
@@ -41,7 +42,8 @@ const tests = [
 ].sort()
 
 const result = spawnSync(process.execPath, [
-  '--import', path.join(import.meta.dirname, 'alias-register.mjs'),
+  // A file: URL, not a path: on Windows Node would read `C:` as a URL scheme.
+  '--import', pathToFileURL(path.join(import.meta.dirname, 'alias-register.mjs')).href,
   '--test', '--test-reporter', process.env.TEST_REPORTER || 'dot',
   ...tests
 ], {
