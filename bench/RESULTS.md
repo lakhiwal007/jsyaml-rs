@@ -13,19 +13,19 @@ jsyaml-rs napi vs js-yaml 5.5.0, geometric mean over real-world files:
 
 | File size | Files | Speedup |
 |---|---:|---:|
-| < 10 KB | 3 | 2.00× |
-| 10 KB – 1 MB | 5 | 1.80× |
-| > 1 MB | 2 | 1.50× |
+| < 10 KB | 3 | 2.48× |
+| 10 KB – 1 MB | 5 | 2.29× |
+| > 1 MB | 2 | 1.49× |
 
 Startup (median over all runs): importing the module, and the first call on a 0.8 KB file (cold JIT / addon initialisation):
 
 | Implementation | Import | First call (compose.yaml) |
 |---|---:|---:|
-| js-yaml 4.3.2 | 4.95 ms | 1.45 ms |
-| js-yaml 5.5.0 | 2.80 ms | 1.75 ms |
-| yaml 2.9.1 | 9.61 ms | 4.00 ms |
-| jsyaml-rs wasm | 4.10 ms | 2.48 ms |
-| jsyaml-rs napi | 3.72 ms | 0.10 ms |
+| js-yaml 4.3.2 | 5.07 ms | 1.49 ms |
+| js-yaml 5.5.0 | 2.99 ms | 1.80 ms |
+| yaml 2.9.1 | 10 ms | 5.56 ms |
+| jsyaml-rs wasm | 4.29 ms | 3.28 ms |
+| jsyaml-rs napi | 4.28 ms | 0.13 ms |
 
 ## Per file
 
@@ -35,12 +35,12 @@ GitHub REST API OpenAPI description (one huge document).
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 126 ms | 126 ms–130 ms | 81.6 MB/s | ≈1.00× | ≈1.01× | 300 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 128 ms | 123 ms–134 ms | 80.6 MB/s | ≈0.99× | ≈1.00× | 428 MB | same as 5.5.0 |
-| yaml 2.9.1 | 1.17 s | 1.16 s–1.55 s | 8.8 MB/s | 0.11× | 0.11× | 849 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 102 ms | 101 ms–123 ms | 100.7 MB/s | 1.23× | 1.25× | 288 MB | same as 5.5.0 |
-| jsyaml-rs napi | 82 ms | 82 ms–91 ms | 125.2 MB/s | 1.53× | 1.55× | 272 MB | same as 5.5.0 |
-| Rust crate alone | 57 ms | 56 ms–73 ms | 181.5 MB/s | 2.22× | 2.25× |  | (Rust values) |
+| js-yaml 4.3.2 | 127 ms | 126 ms–128 ms | 81.3 MB/s | ≈1.00× | ≈1.04× | 300 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 132 ms | 127 ms–141 ms | 78.0 MB/s | ≈0.96× | ≈1.00× | 428 MB | same as 5.5.0 |
+| yaml 2.9.1 | 1.18 s | 1.17 s–1.23 s | 8.8 MB/s | 0.11× | 0.11× | 849 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 104 ms | 102 ms–110 ms | 99.4 MB/s | 1.22× | 1.28× | 292 MB | same as 5.5.0 |
+| jsyaml-rs napi | 83 ms | 83 ms–83 ms | 124.2 MB/s | 1.53× | 1.59× | 272 MB | same as 5.5.0 |
+| Rust crate alone | 57 ms | 57 ms–57 ms | 181.8 MB/s | 2.23× | 2.33× |  | (Rust values) |
 
 ### corpus/kubernetes-openapi.json (4.3 MB, real-world)
 
@@ -48,12 +48,12 @@ Kubernetes OpenAPI spec: JSON, which is valid YAML (flow style throughout).
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 32 ms | 32 ms–40 ms | 134.9 MB/s | ≈1.00× | ≈1.06× | 266 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 34 ms | 31 ms–38 ms | 127.8 MB/s | ≈0.95× | ≈1.00× | 256 MB | same as 5.5.0 |
-| yaml 2.9.1 | 389 ms | 381 ms–549 ms | 11.0 MB/s | 0.08× | 0.09× | 645 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 27 ms | 27 ms–33 ms | 156.8 MB/s | ≈1.16× | ≈1.23× | 181 MB | same as 5.5.0 |
-| jsyaml-rs napi | 23 ms | 23 ms–27 ms | 185.7 MB/s | 1.38× | 1.45× | 166 MB | same as 5.5.0 |
-| Rust crate alone | 13 ms | 13 ms–16 ms | 319.4 MB/s | 2.37× | 2.50× |  | (Rust values) |
+| js-yaml 4.3.2 | 32 ms | 32 ms–34 ms | 134.5 MB/s | ≈1.00× | ≈1.01× | 266 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 32 ms | 31 ms–34 ms | 133.6 MB/s | ≈0.99× | ≈1.00× | 256 MB | same as 5.5.0 |
+| yaml 2.9.1 | 430 ms | 388 ms–445 ms | 10.0 MB/s | 0.07× | 0.07× | 645 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 28 ms | 27 ms–28 ms | 155.6 MB/s | 1.16× | 1.16× | 180 MB | same as 5.5.0 |
+| jsyaml-rs napi | 23 ms | 23 ms–23 ms | 185.9 MB/s | 1.38× | 1.39× | 166 MB | same as 5.5.0 |
+| Rust crate alone | 13 ms | 13 ms–14 ms | 320.6 MB/s | 2.38× | 2.40× |  | (Rust values) |
 
 ### corpus/prometheus-crd.yaml (834.6 KB, real-world)
 
@@ -61,12 +61,12 @@ kube-prometheus Prometheus CustomResourceDefinition (deep nesting, long descript
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 12 ms | 11 ms–13 ms | 69.3 MB/s | ≈1.00× | 0.59× | 121 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 7.09 ms | 6.97 ms–11 ms | 117.7 MB/s | 1.70× | ≈1.00× | 116 MB | same as 5.5.0 |
-| yaml 2.9.1 | 48 ms | 47 ms–53 ms | 17.2 MB/s | 0.25× | 0.15× | 162 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 6.06 ms | 6.01 ms–7.32 ms | 137.8 MB/s | 1.99× | ≈1.17× | 88 MB | same as 5.5.0 |
-| jsyaml-rs napi | 4.76 ms | 4.71 ms–6.19 ms | 175.2 MB/s | 2.53× | 1.49× | 73 MB | same as 5.5.0 |
-| Rust crate alone | 2.70 ms | 2.68 ms–3.13 ms | 309.6 MB/s | 4.47× | 2.63× |  | (Rust values) |
+| js-yaml 4.3.2 | 13 ms | 12 ms–16 ms | 66.4 MB/s | ≈1.00× | 0.67× | 120 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 8.38 ms | 7.04 ms–9.11 ms | 99.5 MB/s | 1.50× | ≈1.00× | 116 MB | same as 5.5.0 |
+| yaml 2.9.1 | 54 ms | 48 ms–62 ms | 15.4 MB/s | 0.23× | 0.15× | 163 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 6.16 ms | 6.12 ms–6.25 ms | 135.6 MB/s | 2.04× | 1.36× | 86 MB | same as 5.5.0 |
+| jsyaml-rs napi | 4.81 ms | 4.72 ms–5.03 ms | 173.7 MB/s | 2.62× | 1.74× | 72 MB | same as 5.5.0 |
+| Rust crate alone | 2.75 ms | 2.69 ms–3.00 ms | 304.0 MB/s | 4.58× | 3.05× |  | (Rust values) |
 
 ### corpus/vite-pnpm-lock.yaml (474.1 KB, real-world)
 
@@ -74,12 +74,12 @@ Vite's pnpm-lock.yaml (large flat mappings, quoted keys).
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 12 ms | 12 ms–12 ms | 40.5 MB/s | ≈1.00× | ≈0.78× | 104 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 9.14 ms | 6.72 ms–12 ms | 51.9 MB/s | ≈1.28× | ≈1.00× | 128 MB | same as 5.5.0 |
-| yaml 2.9.1 | 102 ms | 102 ms–103 ms | 4.6 MB/s | 0.11× | 0.09× | 167 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 6.50 ms | 6.46 ms–6.57 ms | 72.9 MB/s | 1.80× | 1.41× | 84 MB | same as 5.5.0 |
-| jsyaml-rs napi | 4.35 ms | 4.18 ms–4.38 ms | 109.1 MB/s | 2.70× | 2.10× | 78 MB | same as 5.5.0 |
-| Rust crate alone | 3.17 ms | 3.14 ms–4.13 ms | 149.6 MB/s | 3.70× | 2.88× |  | (Rust values) |
+| js-yaml 4.3.2 | 15 ms | 12 ms–16 ms | 32.4 MB/s | ≈1.00× | ≈0.72× | 102 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 11 ms | 8.50 ms–12 ms | 45.0 MB/s | ≈1.39× | ≈1.00× | 119 MB | same as 5.5.0 |
+| yaml 2.9.1 | 111 ms | 102 ms–128 ms | 4.3 MB/s | 0.13× | 0.09× | 167 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 6.57 ms | 6.45 ms–6.80 ms | 72.2 MB/s | 2.23× | 1.60× | 84 MB | same as 5.5.0 |
+| jsyaml-rs napi | 4.36 ms | 4.34 ms–4.39 ms | 108.6 MB/s | 3.36× | 2.41× | 78 MB | same as 5.5.0 |
+| Rust crate alone | 3.22 ms | 3.16 ms–3.57 ms | 147.1 MB/s | 4.55× | 3.27× |  | (Rust values) |
 
 ### corpus/cert-manager-crd.yaml (39.6 KB, real-world)
 
@@ -87,12 +87,12 @@ cert-manager Certificate CRD.
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 0.52 ms | 0.50 ms–0.54 ms | 76.2 MB/s | ≈1.00× | ≈0.60× | 71 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 0.31 ms | 0.30 ms–0.59 ms | 126.7 MB/s | ≈1.66× | ≈1.00× | 74 MB | same as 5.5.0 |
-| yaml 2.9.1 | 2.85 ms | 2.54 ms–3.88 ms | 13.9 MB/s | 0.18× | 0.11× | 100 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 0.27 ms | 0.27 ms–0.27 ms | 146.5 MB/s | 1.92× | 1.16× | 75 MB | same as 5.5.0 |
-| jsyaml-rs napi | 0.18 ms | 0.17 ms–0.18 ms | 223.9 MB/s | 2.94× | 1.77× | 53 MB | same as 5.5.0 |
-| Rust crate alone | 0.13 ms | 0.13 ms–0.13 ms | 309.4 MB/s | 4.06× | 2.44× |  | (Rust values) |
+| js-yaml 4.3.2 | 0.52 ms | 0.40 ms–0.86 ms | 76.4 MB/s | ≈1.00× | ≈0.84× | 65 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 0.44 ms | 0.39 ms–0.59 ms | 90.9 MB/s | ≈1.19× | ≈1.00× | 72 MB | same as 5.5.0 |
+| yaml 2.9.1 | 3.84 ms | 2.78 ms–4.35 ms | 10.3 MB/s | 0.14× | 0.11× | 100 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 0.27 ms | 0.27 ms–0.28 ms | 146.4 MB/s | 1.92× | 1.61× | 75 MB | same as 5.5.0 |
+| jsyaml-rs napi | 0.18 ms | 0.18 ms–0.18 ms | 220.1 MB/s | 2.88× | 2.42× | 53 MB | same as 5.5.0 |
+| Rust crate alone | 0.13 ms | 0.13 ms–0.13 ms | 304.8 MB/s | 3.99× | 3.35× |  | (Rust values) |
 
 ### corpus/petstore-openapi.yaml (23.2 KB, real-world)
 
@@ -100,12 +100,12 @@ Swagger Petstore OpenAPI 3 example.
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 0.68 ms | 0.67 ms–0.71 ms | 33.9 MB/s | ≈1.00× | 0.48× | 76 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 0.33 ms | 0.31 ms–0.62 ms | 69.9 MB/s | 2.06× | ≈1.00× | 89 MB | same as 5.5.0 |
-| yaml 2.9.1 | 5.21 ms | 4.34 ms–6.74 ms | 4.5 MB/s | 0.13× | 0.06× | 102 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 0.26 ms | 0.26 ms–0.26 ms | 88.4 MB/s | 2.61× | 1.27× | 74 MB | same as 5.5.0 |
-| jsyaml-rs napi | 0.18 ms | 0.18 ms–0.18 ms | 130.4 MB/s | 3.85× | 1.87× | 53 MB | same as 5.5.0 |
-| Rust crate alone | 0.14 ms | 0.14 ms–0.15 ms | 161.1 MB/s | 4.76× | 2.31× |  | (Rust values) |
+| js-yaml 4.3.2 | 0.77 ms | 0.69 ms–1.02 ms | 30.0 MB/s | ≈1.00× | 0.59× | 76 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 0.46 ms | 0.33 ms–0.65 ms | 50.5 MB/s | 1.68× | ≈1.00× | 89 MB | same as 5.5.0 |
+| yaml 2.9.1 | 6.93 ms | 5.82 ms–8.76 ms | 3.3 MB/s | 0.11× | 0.07× | 100 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 0.27 ms | 0.26 ms–0.29 ms | 87.1 MB/s | 2.90× | 1.73× | 74 MB | same as 5.5.0 |
+| jsyaml-rs napi | 0.18 ms | 0.18 ms–0.19 ms | 130.0 MB/s | 4.33× | 2.57× | 53 MB | same as 5.5.0 |
+| Rust crate alone | 0.15 ms | 0.14 ms–0.15 ms | 158.2 MB/s | 5.27× | 3.13× |  | (Rust values) |
 
 ### corpus/ingress-nginx-deploy.yaml (16.4 KB, real-world)
 
@@ -113,12 +113,12 @@ ingress-nginx deployment manifests (multi-document Kubernetes YAML).
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 0.54 ms | 0.53 ms–0.55 ms | 30.6 MB/s | ≈1.00× | 0.46× | 71 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 0.25 ms | 0.24 ms–0.34 ms | 66.5 MB/s | 2.17× | ≈1.00× | 78 MB | same as 5.5.0 |
-| yaml 2.9.1 | 3.88 ms | 3.28 ms–4.94 ms | 4.2 MB/s | 0.14× | 0.06× | 97 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 0.20 ms | 0.20 ms–0.20 ms | 80.7 MB/s | 2.63× | 1.21× | 75 MB | same as 5.5.0 |
-| jsyaml-rs napi | 0.13 ms | 0.13 ms–0.14 ms | 121.9 MB/s | 3.98× | 1.83× | 53 MB | same as 5.5.0 |
-| Rust crate alone | 0.11 ms | 0.11 ms–0.11 ms | 146.3 MB/s | 4.78× | 2.20× |  | (Rust values) |
+| js-yaml 4.3.2 | 0.60 ms | 0.55 ms–0.74 ms | 27.3 MB/s | ≈1.00× | 0.55× | 71 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 0.33 ms | 0.26 ms–0.36 ms | 49.9 MB/s | 1.82× | ≈1.00× | 78 MB | same as 5.5.0 |
+| yaml 2.9.1 | 5.17 ms | 4.06 ms–6.36 ms | 3.2 MB/s | 0.12× | 0.06× | 97 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 0.21 ms | 0.21 ms–0.23 ms | 78.0 MB/s | 2.85× | 1.56× | 73 MB | same as 5.5.0 |
+| jsyaml-rs napi | 0.14 ms | 0.14 ms–0.17 ms | 118.8 MB/s | 4.34× | 2.38× | 53 MB | same as 5.5.0 |
+| Rust crate alone | 0.12 ms | 0.11 ms–0.12 ms | 141.0 MB/s | 5.15× | 2.83× |  | (Rust values) |
 
 ### corpus/ha-light-services.yaml (6.8 KB, real-world)
 
@@ -126,12 +126,12 @@ Home Assistant service definitions (typical config file).
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 0.18 ms | 0.17 ms–0.19 ms | 37.4 MB/s | ≈1.00× | ≈0.57× | 72 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 0.10 ms | 99.9 µs–0.21 ms | 65.9 MB/s | ≈1.76× | ≈1.00× | 84 MB | same as 5.5.0 |
-| yaml 2.9.1 | 1.69 ms | 1.45 ms–2.22 ms | 4.0 MB/s | 0.11× | 0.06× | 97 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 100.0 µs | 96.2 µs–0.10 ms | 67.6 MB/s | 1.81× | ≈1.03× | 74 MB | same as 5.5.0 |
-| jsyaml-rs napi | 70.4 µs | 69.4 µs–72.2 µs | 96.1 MB/s | 2.57× | 1.46× | 236 MB | same as 5.5.0 |
-| Rust crate alone | 38.9 µs | 38.5 µs–39.6 µs | 174.0 MB/s | 4.65× | 2.64× |  | (Rust values) |
+| js-yaml 4.3.2 | 0.25 ms | 0.18 ms–0.27 ms | 27.5 MB/s | ≈1.00× | ≈0.58× | 71 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 0.14 ms | 0.12 ms–0.23 ms | 47.7 MB/s | ≈1.73× | ≈1.00× | 81 MB | same as 5.5.0 |
+| yaml 2.9.1 | 2.12 ms | 1.75 ms–2.62 ms | 3.2 MB/s | 0.12× | 0.07× | 97 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 0.13 ms | 0.10 ms–0.14 ms | 53.7 MB/s | 1.95× | ≈1.13× | 74 MB | same as 5.5.0 |
+| jsyaml-rs napi | 79.8 µs | 69.7 µs–99.4 µs | 84.7 MB/s | 3.08× | 1.78× | 59 MB | same as 5.5.0 |
+| Rust crate alone | 41.9 µs | 38.9 µs–43.7 µs | 161.2 MB/s | 5.86× | 3.38× |  | (Rust values) |
 
 ### corpus/node-ci-workflow.yml (3.2 KB, real-world)
 
@@ -139,12 +139,12 @@ A Node.js GitHub Actions workflow.
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 82.3 µs | 77.9 µs–85.7 µs | 38.8 MB/s | ≈1.00× | 0.58× | 69 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 48.0 µs | 47.2 µs–64.2 µs | 66.6 MB/s | 1.71× | ≈1.00× | 74 MB | same as 5.5.0 |
-| yaml 2.9.1 | 0.56 ms | 0.46 ms–0.76 ms | 5.7 MB/s | 0.15× | 0.09× | 93 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 35.5 µs | 35.3 µs–35.6 µs | 90.1 MB/s | 2.32× | 1.35× | 73 MB | same as 5.5.0 |
-| jsyaml-rs napi | 25.2 µs | 25.0 µs–25.5 µs | 126.5 MB/s | 3.26× | 1.90× | 53 MB | same as 5.5.0 |
-| Rust crate alone | 17.5 µs | 17.4 µs–18.1 µs | 182.4 MB/s | 4.70× | 2.74× |  | (Rust values) |
+| js-yaml 4.3.2 | 93.8 µs | 85.0 µs–0.12 ms | 34.0 MB/s | ≈1.00× | 0.71× | 68 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 66.7 µs | 51.6 µs–75.4 µs | 47.9 MB/s | 1.41× | ≈1.00× | 70 MB | same as 5.5.0 |
+| yaml 2.9.1 | 0.70 ms | 0.58 ms–0.87 ms | 4.6 MB/s | 0.13× | 0.10× | 93 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 36.9 µs | 35.7 µs–38.4 µs | 86.6 MB/s | 2.54× | 1.81× | 74 MB | same as 5.5.0 |
+| jsyaml-rs napi | 25.4 µs | 25.2 µs–25.9 µs | 125.5 MB/s | 3.69× | 2.62× | 53 MB | same as 5.5.0 |
+| Rust crate alone | 19.4 µs | 18.5 µs–20.7 µs | 164.6 MB/s | 4.84× | 3.44× |  | (Rust values) |
 
 ### corpus/compose.yaml (0.8 KB, real-world)
 
@@ -152,12 +152,12 @@ A docker compose file (tiny).
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 25.3 µs | 14.0 µs–26.1 µs | 31.9 MB/s | ≈1.00× | ≈0.93× | 71 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 23.5 µs | 22.5 µs–30.8 µs | 34.4 MB/s | ≈1.08× | ≈1.00× | 69 MB | same as 5.5.0 |
-| yaml 2.9.1 | 0.23 ms | 0.20 ms–0.32 ms | 3.5 MB/s | 0.11× | 0.10× | 92 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 12.7 µs | 12.7 µs–12.8 µs | 63.3 MB/s | 1.98× | 1.84× | 74 MB | same as 5.5.0 |
-| jsyaml-rs napi | 8.2 µs | 8.1 µs–8.2 µs | 98.7 MB/s | 3.09× | 2.87× | 53 MB | same as 5.5.0 |
-| Rust crate alone | 6.6 µs | 6.5 µs–6.7 µs | 123.1 MB/s | 3.86× | 3.58× |  | (Rust values) |
+| js-yaml 4.3.2 | 31.0 µs | 26.2 µs–37.5 µs | 26.0 MB/s | ≈1.00× | ≈0.94× | 63 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 29.1 µs | 25.2 µs–33.8 µs | 27.8 MB/s | ≈1.07× | ≈1.00× | 71 MB | same as 5.5.0 |
+| yaml 2.9.1 | 0.32 ms | 0.27 ms–0.41 ms | 2.5 MB/s | 0.10× | 0.09× | 86 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 14.2 µs | 13.8 µs–14.6 µs | 57.0 MB/s | 2.19× | 2.05× | 74 MB | same as 5.5.0 |
+| jsyaml-rs napi | 8.9 µs | 8.5 µs–9.5 µs | 90.5 MB/s | 3.48× | 3.26× | 53 MB | same as 5.5.0 |
+| Rust crate alone | 7.5 µs | 6.5 µs–7.9 µs | 108.0 MB/s | 4.15× | 3.89× |  | (Rust values) |
 
 ### corpus/js-yaml-document_huge.yaml (7.2 MB, js-yaml's own benchmark)
 
@@ -165,12 +165,12 @@ js-yaml's benchmark sample `document_huge.yaml`, chosen by js-yaml's authors.
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 84 ms | 84 ms–85 ms | 85.2 MB/s | ≈1.00× | 0.92× | 199 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 77 ms | 68 ms–81 ms | 93.0 MB/s | 1.09× | ≈1.00× | 295 MB | same as 5.5.0 |
-| yaml 2.9.1 | 731 ms | 729 ms–735 ms | 9.8 MB/s | 0.12× | 0.11× | 805 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 71 ms | 70 ms–72 ms | 101.0 MB/s | 1.18× | ≈1.09× | 222 MB | same as 5.5.0 |
-| jsyaml-rs napi | 44 ms | 43 ms–44 ms | 165.0 MB/s | 1.94× | 1.77× | 243 MB | same as 5.5.0 |
-| Rust crate alone | 37 ms | 37 ms–38 ms | 191.6 MB/s | 2.25× | 2.06× |  | (Rust values) |
+| js-yaml 4.3.2 | 87 ms | 84 ms–98 ms | 82.1 MB/s | ≈1.00× | 0.83× | 197 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 73 ms | 69 ms–81 ms | 98.6 MB/s | 1.20× | ≈1.00× | 295 MB | same as 5.5.0 |
+| yaml 2.9.1 | 744 ms | 734 ms–796 ms | 9.7 MB/s | 0.12× | 0.10× | 806 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 71 ms | 70 ms–79 ms | 100.7 MB/s | 1.23× | ≈1.02× | 221 MB | same as 5.5.0 |
+| jsyaml-rs napi | 46 ms | 44 ms–55 ms | 155.7 MB/s | 1.90× | 1.58× | 219 MB | same as 5.5.0 |
+| Rust crate alone | 38 ms | 37 ms–38 ms | 190.8 MB/s | 2.32× | 1.94× |  | (Rust values) |
 
 ### corpus/js-yaml-document_nodeca_application.yaml (1.7 KB, js-yaml's own benchmark)
 
@@ -178,12 +178,12 @@ js-yaml's benchmark sample `document_nodeca_application.yaml`.
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 17.3 µs | 9.3 µs–17.8 µs | 97.7 MB/s | ≈1.00× | 1.12× | 60 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 19.4 µs | 18.1 µs–23.1 µs | 87.2 MB/s | 0.89× | ≈1.00× | 64 MB | same as 5.5.0 |
-| yaml 2.9.1 | 0.24 ms | 0.19 ms–0.31 ms | 7.0 MB/s | 0.07× | 0.08× | 87 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 9.3 µs | 9.2 µs–9.4 µs | 181.4 MB/s | ≈1.86× | 2.08× | 74 MB | same as 5.5.0 |
-| jsyaml-rs napi | 5.1 µs | 5.1 µs–5.2 µs | 330.3 MB/s | 3.38× | 3.79× | 53 MB | same as 5.5.0 |
-| Rust crate alone | 3.7 µs | 3.7 µs–3.7 µs | 459.6 MB/s | 4.70× | 5.27× |  | (Rust values) |
+| js-yaml 4.3.2 | 20.7 µs | 12.2 µs–23.7 µs | 81.6 MB/s | ≈1.00× | ≈1.13× | 60 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 23.5 µs | 20.4 µs–25.8 µs | 71.9 MB/s | ≈0.88× | ≈1.00× | 63 MB | same as 5.5.0 |
+| yaml 2.9.1 | 0.33 ms | 0.27 ms–0.39 ms | 5.0 MB/s | 0.06× | 0.07× | 89 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 10.2 µs | 9.6 µs–10.4 µs | 166.3 MB/s | 2.04× | 2.31× | 73 MB | same as 5.5.0 |
+| jsyaml-rs napi | 5.2 µs | 5.1 µs–5.3 µs | 326.3 MB/s | 4.00× | 4.54× | 53 MB | same as 5.5.0 |
+| Rust crate alone | 4.0 µs | 3.8 µs–4.3 µs | 420.0 MB/s | 5.15× | 5.84× |  | (Rust values) |
 
 ### k8s.yaml (10.8 MB, synthetic)
 
@@ -191,12 +191,12 @@ Generated by gen-data.mjs: 20k small Kubernetes-style documents.
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 212 ms | 210 ms–214 ms | 50.8 MB/s | ≈1.00× | 1.19× | 280 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 253 ms | 248 ms–254 ms | 42.6 MB/s | 0.84× | ≈1.00× | 598 MB | same as 5.5.0 |
-| yaml 2.9.1 | 2.55 s | 2.54 s–2.56 s | 4.2 MB/s | 0.08× | 0.10× | 590 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 169 ms | 168 ms–170 ms | 63.8 MB/s | 1.26× | 1.50× | 342 MB | same as 5.5.0 |
-| jsyaml-rs napi | 112 ms | 112 ms–113 ms | 95.9 MB/s | 1.89× | 2.25× | 362 MB | same as 5.5.0 |
-| Rust crate alone | 94 ms | 94 ms–95 ms | 114.4 MB/s | 2.25× | 2.68× |  | (Rust values) |
+| js-yaml 4.3.2 | 215 ms | 213 ms–253 ms | 50.1 MB/s | ≈1.00× | ≈1.18× | 280 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 253 ms | 249 ms–270 ms | 42.5 MB/s | ≈0.85× | ≈1.00× | 598 MB | same as 5.5.0 |
+| yaml 2.9.1 | 2.57 s | 2.56 s–2.60 s | 4.2 MB/s | 0.08× | 0.10× | 591 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 183 ms | 179 ms–187 ms | 58.8 MB/s | 1.17× | 1.38× | 343 MB | same as 5.5.0 |
+| jsyaml-rs napi | 121 ms | 117 ms–127 ms | 88.8 MB/s | 1.77× | 2.09× | 362 MB | same as 5.5.0 |
+| Rust crate alone | 95 ms | 95 ms–99 ms | 112.9 MB/s | 2.25× | 2.65× |  | (Rust values) |
 
 ### openapi.yaml (8.1 MB, synthetic)
 
@@ -204,12 +204,12 @@ Generated by gen-data.mjs: OpenAPI-like, folded descriptions.
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 132 ms | 132 ms–133 ms | 61.5 MB/s | ≈1.00× | 1.11× | 452 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 146 ms | 141 ms–157 ms | 55.6 MB/s | 0.90× | ≈1.00× | 716 MB | same as 5.5.0 |
-| yaml 2.9.1 | 2.92 s | 2.91 s–3.00 s | 2.8 MB/s | 0.05× | 0.05× | 861 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 100 ms | 98 ms–101 ms | 81.6 MB/s | 1.33× | 1.47× | 242 MB | same as 5.5.0 |
-| jsyaml-rs napi | 68 ms | 67 ms–68 ms | 120.3 MB/s | 1.96× | 2.16× | 248 MB | same as 5.5.0 |
-| Rust crate alone | 56 ms | 55 ms–56 ms | 146.6 MB/s | 2.38× | 2.64× |  | (Rust values) |
+| js-yaml 4.3.2 | 133 ms | 132 ms–134 ms | 61.2 MB/s | ≈1.00× | 1.17× | 452 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 156 ms | 151 ms–159 ms | 52.2 MB/s | 0.85× | ≈1.00× | 715 MB | same as 5.5.0 |
+| yaml 2.9.1 | 3.00 s | 2.98 s–3.03 s | 2.7 MB/s | 0.04× | 0.05× | 862 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 100 ms | 98 ms–100 ms | 81.7 MB/s | 1.34× | 1.57× | 242 MB | same as 5.5.0 |
+| jsyaml-rs napi | 68 ms | 67 ms–70 ms | 120.4 MB/s | 1.97× | 2.31× | 248 MB | same as 5.5.0 |
+| Rust crate alone | 57 ms | 56 ms–61 ms | 143.8 MB/s | 2.35× | 2.76× |  | (Rust values) |
 
 ### lockfile.yaml (8.2 MB, synthetic)
 
@@ -217,12 +217,12 @@ Generated by gen-data.mjs: 40k-entry flat mapping.
 
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
-| js-yaml 4.3.2 | 157 ms | 156 ms–158 ms | 52.4 MB/s | ≈1.00× | ≈1.09× | 240 MB | same as 5.5.0 |
-| js-yaml 5.5.0 | 171 ms | 156 ms–173 ms | 48.2 MB/s | ≈0.92× | ≈1.00× | 375 MB | same as 5.5.0 |
-| yaml 2.9.1 | 9.14 s | 9.11 s–9.17 s | 0.9 MB/s | 0.02× | 0.02× | 577 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 127 ms | 127 ms–128 ms | 64.9 MB/s | 1.24× | 1.35× | 252 MB | same as 5.5.0 |
-| jsyaml-rs napi | 93 ms | 93 ms–94 ms | 88.4 MB/s | 1.69× | 1.83× | 284 MB | same as 5.5.0 |
-| Rust crate alone | 56 ms | 56 ms–56 ms | 147.1 MB/s | 2.81× | 3.05× |  | (Rust values) |
+| js-yaml 4.3.2 | 159 ms | 158 ms–162 ms | 51.7 MB/s | ≈1.00× | 1.08× | 242 MB | same as 5.5.0 |
+| js-yaml 5.5.0 | 172 ms | 165 ms–175 ms | 47.9 MB/s | 0.93× | ≈1.00× | 375 MB | same as 5.5.0 |
+| yaml 2.9.1 | 9.29 s | 9.26 s–9.33 s | 0.9 MB/s | 0.02× | 0.02× | 576 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 127 ms | 127 ms–128 ms | 64.7 MB/s | 1.25× | 1.35× | 252 MB | same as 5.5.0 |
+| jsyaml-rs napi | 92 ms | 91 ms–92 ms | 89.9 MB/s | 1.74× | 1.88× | 284 MB | same as 5.5.0 |
+| Rust crate alone | 57 ms | 56 ms–57 ms | 145.1 MB/s | 2.81× | 3.03× |  | (Rust values) |
 
 ### anchors.yaml (2.9 MB, synthetic, yaml11-merge)
 
@@ -231,8 +231,8 @@ Generated by gen-data.mjs: compose-style anchors, aliases and `<<` merges.
 | Implementation | Median | IQR | Throughput | vs js-yaml 4.3.2 | vs js-yaml 5.5.0 | Peak RSS | Output |
 |---|---:|---:|---:|---:|---:|---:|---|
 | js-yaml 4.3.2 | failed: YAMLException: merge keys exceeded maxTotalMergeKeys (10000) (12508:5) | | | | | | |
-| js-yaml 5.5.0 | 80 ms | 79 ms–81 ms | 36.3 MB/s | n/a | ≈1.00× | 268 MB | same as 5.5.0 |
-| yaml 2.9.1 | 27.48 s | 27.28 s–27.88 s | 0.1 MB/s | n/a | 0.00× | 401 MB | same as 5.5.0 |
-| jsyaml-rs wasm | 76 ms | 76 ms–76 ms | 38.2 MB/s | n/a | 1.05× | 238 MB | same as 5.5.0 |
-| jsyaml-rs napi | 57 ms | 56 ms–57 ms | 51.4 MB/s | n/a | 1.42× | 348 MB | same as 5.5.0 |
-| Rust crate alone | 38 ms | 38 ms–38 ms | 76.1 MB/s | n/a | 2.10× |  | (Rust values) |
+| js-yaml 5.5.0 | 82 ms | 79 ms–84 ms | 35.7 MB/s | n/a | ≈1.00× | 268 MB | same as 5.5.0 |
+| yaml 2.9.1 | 28.12 s | 27.65 s–28.43 s | 0.1 MB/s | n/a | 0.00× | 400 MB | same as 5.5.0 |
+| jsyaml-rs wasm | 77 ms | 77 ms–83 ms | 37.8 MB/s | n/a | ≈1.06× | 238 MB | same as 5.5.0 |
+| jsyaml-rs napi | 58 ms | 57 ms–60 ms | 50.5 MB/s | n/a | 1.41× | 395 MB | same as 5.5.0 |
+| Rust crate alone | 39 ms | 39 ms–40 ms | 74.6 MB/s | n/a | 2.09× |  | (Rust values) |
