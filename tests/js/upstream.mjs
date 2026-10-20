@@ -24,7 +24,10 @@ if (!fs.existsSync(upstream)) {
 
 // The spec test reads the suite from test/spec/yaml-test-suite.
 const suiteLink = path.join(upstream, 'test/spec/yaml-test-suite')
-if (!fs.existsSync(suiteLink)) fs.symlinkSync(path.join(root, 'vendor/yaml-test-suite'), suiteLink, 'dir')
+// On Windows a junction, which unlike a directory symlink needs no special rights.
+if (!fs.existsSync(suiteLink)) {
+  fs.symlinkSync(path.join(root, 'vendor/yaml-test-suite'), suiteLink, process.platform === 'win32' ? 'junction' : 'dir')
+}
 
 // Test-only devDependencies of js-yaml (@streamparser/json, ...).
 if (!fs.existsSync(path.join(upstream, 'node_modules'))) {
