@@ -28,7 +28,7 @@ if (!args.artifacts) {
 const version = /^version = "(.*)"/m.exec(fs.readFileSync(path.join(root, 'Cargo.toml'), 'utf8'))[1]
 const jsYamlVersion = fs.readFileSync(path.join(root, 'conformance/UPSTREAM_VERSION'), 'utf8').trim()
 const platforms = JSON.parse(fs.readFileSync(path.join(root, 'scripts/platforms.json'), 'utf8'))
-const repository = { type: 'git', url: 'git+https://github.com/OWNER/jsyaml-rs.git' }
+const repository = { type: 'git', url: 'git+https://github.com/lakhiwal007/jsyaml-rs.git' }
 const common = { version, license: 'MIT', repository, engines: { node: '>=18' } }
 
 const write = (dir, file, content) => fs.writeFileSync(path.join(dir, file), typeof content === 'string' ? content : JSON.stringify(content, null, 2) + '\n')
