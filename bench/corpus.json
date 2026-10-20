@@ -1,0 +1,122 @@
+[
+  {
+    "file": "corpus/github-rest-api.yaml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "GitHub REST API OpenAPI description (one huge document).",
+    "url": "https://raw.githubusercontent.com/github/rest-api-description/755ee33b4a81d51f6f07a902cce26cbec3b822f2/descriptions/api.github.com/api.github.com.yaml",
+    "sha256": "258505f253efda24d0c3156203a8d632fa055154d5f16a8327043f4e0ceea7bc"
+  },
+  {
+    "file": "corpus/kubernetes-openapi.json",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "Kubernetes OpenAPI spec: JSON, which is valid YAML (flow style throughout).",
+    "url": "https://raw.githubusercontent.com/kubernetes/kubernetes/bbf142898f357d8ba4642748afdc4b7d70479021/api/openapi-spec/swagger.json",
+    "sha256": "915d4f73ee05c562ac2fec5e164bd6ab5adcbe55f05353f2b628ebe1a7fee929"
+  },
+  {
+    "file": "corpus/prometheus-crd.yaml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "kube-prometheus Prometheus CustomResourceDefinition (deep nesting, long descriptions).",
+    "url": "https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/f81c076ab8f542c457840cd4c62656b8d6b4f43a/manifests/setup/0prometheusCustomResourceDefinition.yaml",
+    "sha256": "72e2a743ad38747ee562721e780b8b1f90db5dd3280c276eed637dc2daa694f9"
+  },
+  {
+    "file": "corpus/vite-pnpm-lock.yaml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "Vite's pnpm-lock.yaml (large flat mappings, quoted keys).",
+    "url": "https://raw.githubusercontent.com/vitejs/vite/467f7ac3b8c7cca0b33290e7fd86f3fc79ce92cb/pnpm-lock.yaml",
+    "sha256": "d11e900a2ba46479c21dc44dabcdedc16b9081ad36444393eb72001680a71c39"
+  },
+  {
+    "file": "corpus/cert-manager-crd.yaml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "cert-manager Certificate CRD.",
+    "url": "https://raw.githubusercontent.com/cert-manager/cert-manager/v1.16.1/deploy/crds/crd-certificates.yaml",
+    "sha256": "b419c7a07f7ea95044beede49fcc0c33dc8c1f81b97f888c890d34c293012112"
+  },
+  {
+    "file": "corpus/petstore-openapi.yaml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "Swagger Petstore OpenAPI 3 example.",
+    "url": "https://raw.githubusercontent.com/swagger-api/swagger-petstore/d57941e8fe959e508796b27469b1e8bba73392dc/src/main/resources/openapi.yaml",
+    "sha256": "e1a2480ffa440e44b981db5b038374214c532ffc92026fd51fb957c88bfbdd88"
+  },
+  {
+    "file": "corpus/ingress-nginx-deploy.yaml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "ingress-nginx deployment manifests (multi-document Kubernetes YAML).",
+    "url": "https://raw.githubusercontent.com/kubernetes/ingress-nginx/dbb11b92ddb77bee9c35e462479129354c84f939/deploy/static/provider/cloud/deploy.yaml",
+    "sha256": "502fddca66b09c20dd48b6d0a792a9671cd663a3a0d2a8bda5ae990d13b6c5b2"
+  },
+  {
+    "file": "corpus/ha-light-services.yaml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "Home Assistant service definitions (typical config file).",
+    "url": "https://raw.githubusercontent.com/home-assistant/core/9b4cd3839f905ef55ddafbfebf5202d033a96aa8/homeassistant/components/light/services.yaml",
+    "sha256": "801d6837776b0fe61d1df4bb4c71a6434c0d3d35277ca3d128ce1061f0cb2758"
+  },
+  {
+    "file": "corpus/node-ci-workflow.yml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "A Node.js GitHub Actions workflow.",
+    "url": "https://raw.githubusercontent.com/nodejs/node/107133ceb87ad9e7c33f3234a2cef652d69055ac/.github/workflows/test-linux.yml",
+    "sha256": "d90d80c151ee17910d800a50db7ff6ba4791421d0cd1751b8cd5ec1c52dd05e3"
+  },
+  {
+    "file": "corpus/compose.yaml",
+    "kind": "real-world",
+    "profile": "default",
+    "description": "A docker compose file (tiny).",
+    "url": "https://raw.githubusercontent.com/docker/awesome-compose/30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562/react-express-mongodb/compose.yaml",
+    "sha256": "645fb746ec9eaeea7ee9ab231a67fe31412bdd1268d7c72206bb8fb275c25746"
+  },
+  {
+    "file": "corpus/js-yaml-document_huge.yaml",
+    "kind": "js-yaml's own benchmark",
+    "profile": "default",
+    "description": "js-yaml's benchmark sample `document_huge.yaml`, chosen by js-yaml's authors.",
+    "url": "https://raw.githubusercontent.com/nodeca/js-yaml/5.5.0/benchmark/samples/document_huge.yaml",
+    "sha256": "2d1ae837f5f542c088918089247c49cafd31856f79d456ddd0aa077ad8a3eedb"
+  },
+  {
+    "file": "corpus/js-yaml-document_nodeca_application.yaml",
+    "kind": "js-yaml's own benchmark",
+    "profile": "default",
+    "description": "js-yaml's benchmark sample `document_nodeca_application.yaml`.",
+    "url": "https://raw.githubusercontent.com/nodeca/js-yaml/5.5.0/benchmark/samples/document_nodeca_application.yaml",
+    "sha256": "5ba100a22c251bf6c96bf226a1cc2376cd175f7b8c36a3b2c9d6712e4b6cdde4"
+  },
+  {
+    "file": "k8s.yaml",
+    "kind": "synthetic",
+    "profile": "default",
+    "description": "Generated by gen-data.mjs: 20k small Kubernetes-style documents."
+  },
+  {
+    "file": "openapi.yaml",
+    "kind": "synthetic",
+    "profile": "default",
+    "description": "Generated by gen-data.mjs: OpenAPI-like, folded descriptions."
+  },
+  {
+    "file": "lockfile.yaml",
+    "kind": "synthetic",
+    "profile": "default",
+    "description": "Generated by gen-data.mjs: 40k-entry flat mapping."
+  },
+  {
+    "file": "anchors.yaml",
+    "kind": "synthetic",
+    "profile": "yaml11-merge",
+    "description": "Generated by gen-data.mjs: compose-style anchors, aliases and `<<` merges."
+  }
+]

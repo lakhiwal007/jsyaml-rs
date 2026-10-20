@@ -1,0 +1,153 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+
+jobs:
+  lint:
+    name: fmt + clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: rustup show # installs the toolchain pinned in rust-toolchain.toml
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+      - run: cargo doc --workspace --no-deps --all-features
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v5
+      - run: rustup show
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --workspace --all-features
+      - run: cargo test -p jsyaml --no-default-features
+      - name: Conformance scoreboard
+        if: matrix.os == 'ubuntu-latest'
+        run: CONFORMANCE_REPORT=1 cargo test -p jsyaml --test conformance -- --nocapture >> "$GITHUB_STEP_SUMMARY"
+
+  js-unit:
+    name: JS decoder unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - run: node --test tests/js/decode.test.cjs
+
+  msrv:
+    name: MSRV (1.85)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@1.85
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo +1.85 check -p jsyaml --all-features
+
+  parser-differential:
+    name: parseEvents vs js-yaml (${{ matrix.os }}, 50k random inputs)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v5
+      - run: rustup show
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: scripts/build-node.sh
+        shell: bash
+      - run: npm ci --no-audit --no-fund
+      - run: node tests/js/differential-events.cjs crates/jsyaml-node/pkg 50000 ${{ github.run_number }}
+
+  packages:
+    name: ${{ matrix.pkg }} package (${{ matrix.os }}) vs js-yaml's test suite
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        pkg: [node, wasm]
+        exclude:
+          - { os: macos-latest, pkg: wasm }
+          - { os: windows-latest, pkg: wasm }
+    steps:
+      - uses: actions/checkout@v5
+      - run: rustup show
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - if: matrix.pkg == 'wasm'
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen@0.2.129
+      - if: matrix.pkg == 'wasm'
+        run: sudo apt-get update && sudo apt-get install -y binaryen
+      - run: scripts/build-${{ matrix.pkg }}.sh
+        shell: bash
+      - run: npm ci --no-audit --no-fund
+      - run: scripts/sync-upstream.sh
+        shell: bash
+      - run: node tests/js/differential.cjs crates/jsyaml-${{ matrix.pkg }}/pkg
+      - run: node tests/js/differential-load.cjs crates/jsyaml-${{ matrix.pkg }}/pkg 50000 ${{ github.run_number }}
+      - run: node --expose-gc tests/js/memory.cjs crates/jsyaml-${{ matrix.pkg }}/pkg
+      - run: node tests/js/upstream.mjs crates/jsyaml-${{ matrix.pkg }}/pkg
+
+  fixtures-fresh:
+    name: fixtures match js-yaml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: scripts/sync-upstream.sh
+      - run: git diff --exit-code conformance/
+
+  deny:
+    name: cargo-deny
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: EmbarkStudios/cargo-deny-action@v2
+
+  fuzz:
+    name: fuzz (smoke)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-fuzz
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/fuzz-seed.mjs
+      - run: cargo +nightly fuzz run load fuzz/corpus/load -- -max_total_time=60
+      - run: cargo +nightly fuzz run fast_path fuzz/corpus/fast_path -- -max_total_time=60

@@ -1,0 +1,11 @@
+{
+  "name": "jsyaml-rs-dev",
+  "private": true,
+  "description": "Dev dependencies for the JS tests (tests/js) of the jsyaml-node and jsyaml-wasm packages",
+  "scripts": {
+    "test": "node --test tests/js/*.test.cjs"
+  },
+  "devDependencies": {
+    "js-yaml": "5.5.0"
+  }
+}

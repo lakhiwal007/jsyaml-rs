@@ -1,0 +1,26 @@
+[package]
+name = "jsyaml-cli"
+description = "Command-line YAML to JSON converter powered by the jsyaml crate"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories = ["command-line-utilities", "encoding"]
+
+[[bin]]
+name = "jsyaml"
+path = "src/main.rs"
+# Same name as the library crate; documenting both would collide (cargo#6313).
+doc = false
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+jsyaml = { workspace = true, features = ["serde"] }
+serde_json.workspace = true
+
+[lints]
+workspace = true

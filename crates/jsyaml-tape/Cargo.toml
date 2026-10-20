@@ -1,0 +1,19 @@
+[package]
+name = "jsyaml-tape"
+description = "Shared layer of the JS bindings: option mapping and the JSON / value / event transports"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+publish = false
+
+[dependencies]
+jsyaml = { workspace = true }
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[lints]
+workspace = true

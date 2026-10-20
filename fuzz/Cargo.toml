@@ -1,0 +1,31 @@
+[package]
+name = "jsyaml-fuzz"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4.13"
+jsyaml = { path = "../crates/jsyaml", features = ["serde"] }
+# float_roundtrip: parse numbers exactly, as JSON.parse does.
+serde_json = { version = "1.0.154", features = ["float_roundtrip"] }
+
+# Keep the fuzz crate out of the main workspace (it needs nightly).
+[workspace]
+
+[[bin]]
+name = "load"
+path = "fuzz_targets/load.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fast_path"
+path = "fuzz_targets/fast_path.rs"
+test = false
+doc = false
+bench = false

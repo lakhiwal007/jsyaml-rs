@@ -1,0 +1,125 @@
+name: Release
+
+# Push a tag like v0.2.0 after bumping workspace.package.version and CHANGELOG.md.
+# Publishes the CLI binaries (GitHub release), the crates (crates.io) and the npm
+# packages: one per platform with the native addon (scripts/platforms.json), the main
+# jsyaml-node package, and jsyaml-wasm. Needs the CARGO_REGISTRY_TOKEN and NPM_TOKEN
+# secrets in the `release` environment.
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  cli-binaries:
+    name: CLI (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu }
+          - { os: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu }
+          - { os: macos-latest, target: aarch64-apple-darwin }
+          - { os: macos-13, target: x86_64-apple-darwin }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc }
+    steps:
+      - uses: actions/checkout@v5
+      - run: rustup show && rustup target add ${{ matrix.target }}
+      - run: cargo build --release -p jsyaml-cli --target ${{ matrix.target }}
+      - name: Package
+        shell: bash
+        run: |
+          bin=jsyaml; [ "${{ runner.os }}" = Windows ] && bin=jsyaml.exe
+          tar -czf jsyaml-${{ github.ref_name }}-${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release $bin
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: jsyaml-*.tar.gz
+
+  crates-io:
+    name: Publish to crates.io
+    needs: cli-binaries
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v5
+      - run: rustup show
+      - run: cargo publish -p jsyaml
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - run: cargo publish -p jsyaml-cli
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+  node-addon:
+    name: addon (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - { os: macos-latest, target: aarch64-apple-darwin, lib: libjsyaml_node.dylib }
+          - { os: macos-latest, target: x86_64-apple-darwin, lib: libjsyaml_node.dylib }
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, lib: libjsyaml_node.so }
+          - { os: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu, lib: libjsyaml_node.so }
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-musl, lib: libjsyaml_node.so, musl: true }
+          - { os: ubuntu-24.04-arm, target: aarch64-unknown-linux-musl, lib: libjsyaml_node.so, musl: true }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, lib: jsyaml_node.dll }
+          - { os: windows-latest, target: aarch64-pc-windows-msvc, lib: jsyaml_node.dll }
+    steps:
+      - uses: actions/checkout@v5
+      - run: rustup show && rustup target add ${{ matrix.target }}
+      - if: matrix.musl
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - name: Build
+        shell: bash
+        env:
+          # A musl cdylib must link the C runtime dynamically, like Node itself.
+          RUSTFLAGS: ${{ matrix.musl && '-C target-feature=-crt-static' || '' }}
+        run: |
+          cargo build -p jsyaml-node --profile node-release --target ${{ matrix.target }}
+          mkdir -p artifacts/${{ matrix.target }}
+          cp target/${{ matrix.target }}/node-release/${{ matrix.lib }} artifacts/${{ matrix.target }}/jsyaml.node
+      - uses: actions/upload-artifact@v4
+        with:
+          name: addon-${{ matrix.target }}
+          path: artifacts
+
+  npm:
+    name: Publish to npm
+    needs: node-addon
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v5
+      - run: rustup show
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen@0.2.129
+      - run: sudo apt-get update && sudo apt-get install -y binaryen
+      - run: scripts/build-wasm.sh
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: addon-*
+          path: artifacts
+          merge-multiple: true
+      - run: node scripts/package-npm.mjs --artifacts artifacts --out dist/npm
+      - name: Smoke-test the linux-x64 package
+        run: |
+          cp dist/npm/jsyaml-node-linux-x64-gnu/jsyaml.node dist/npm/jsyaml-node/
+          npm ci --no-audit --no-fund
+          node -e "const y = require('./dist/npm/jsyaml-node'); if (y.load('a: [1]').a[0] !== 1) process.exit(1)"
+          rm dist/npm/jsyaml-node/jsyaml.node
+      # Platform packages first, so the main package's optionalDependencies resolve.
+      - name: Publish
+        run: |
+          for dir in dist/npm/jsyaml-node-*/ dist/npm/jsyaml-wasm/ dist/npm/jsyaml-node/; do
+            npm publish --access public "$dir"
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

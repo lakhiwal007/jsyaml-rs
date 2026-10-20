@@ -1,0 +1,166 @@
+[
+	{
+		"id": "custom/alias/collection",
+		"yaml": "a: &x [1, 2]\nb: *x\n"
+	},
+	{
+		"id": "custom/alias/mapping-in-seq",
+		"yaml": "- &m {k: v}\n- *m\n- *m\n"
+	},
+	{
+		"id": "custom/alias/recursive",
+		"yaml": "&r [*r]\n"
+	},
+	{
+		"id": "custom/alias/recursive-map",
+		"yaml": "&r {self: *r}\n"
+	},
+	{
+		"id": "custom/alias/scalar-copied",
+		"yaml": "a: &s text\nb: *s\n"
+	},
+	{
+		"id": "custom/alias/undefined",
+		"yaml": "a: *nope\n"
+	},
+	{
+		"id": "custom/merge/basic",
+		"yaml": "base: &b {x: 1, y: 2}\nderived:\n  <<: *b\n  y: 3\n"
+	},
+	{
+		"id": "custom/merge/list",
+		"yaml": "a: &a {x: 1}\nb: &b {y: 2}\nc:\n  <<: [*a, *b]\n"
+	},
+	{
+		"id": "custom/number/special",
+		"yaml": "- .inf\n- -.Inf\n- .nan\n- -0\n- 0.0\n- -0.0\n- 1e3\n- 0x1F\n- 0o17\n- 9007199254740993\n"
+	},
+	{
+		"id": "custom/number/strings",
+		"yaml": "- '1'\n- \"2\"\n- !!str 3\n- 01\n- +1\n"
+	},
+	{
+		"id": "custom/keys/order",
+		"yaml": "b: 1\n2: x\na: 2\n1: y\n-1: z\n"
+	},
+	{
+		"id": "custom/keys/non-string",
+		"yaml": "1: a\ntrue: b\nnull: c\n~: d\n1.5: e\n"
+	},
+	{
+		"id": "custom/keys/proto",
+		"yaml": "__proto__: {polluted: true}\nok: 1\n"
+	},
+	{
+		"id": "custom/keys/duplicate",
+		"yaml": "a: 1\na: 2\n"
+	},
+	{
+		"id": "custom/keys/complex",
+		"yaml": "? [1, 2]\n: v\n"
+	},
+	{
+		"id": "custom/yaml11/binary",
+		"yaml": "--- !!binary |\n  R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\n"
+	},
+	{
+		"id": "custom/yaml11/timestamp",
+		"yaml": "- 2001-12-14t21:59:43.10-05:00\n- 2002-12-14\n- !!timestamp 2001-12-15 2:59:43.10\n"
+	},
+	{
+		"id": "custom/yaml11/set",
+		"yaml": "--- !!set\n? a\n? b\n"
+	},
+	{
+		"id": "custom/yaml11/omap",
+		"yaml": "--- !!omap\n- a: 1\n- b: 2\n"
+	},
+	{
+		"id": "custom/yaml11/pairs",
+		"yaml": "--- !!pairs\n- a: 1\n- a: 2\n"
+	},
+	{
+		"id": "custom/yaml11/bools",
+		"yaml": "[yes, No, on, OFF, y, n, true]\n"
+	},
+	{
+		"id": "custom/unicode/offsets-error",
+		"yaml": "é€😀: [1, 2\n"
+	},
+	{
+		"id": "custom/unicode/escapes",
+		"yaml": "\"\\u00e9\\U0001F600\\x41\\t\\n\"\n"
+	},
+	{
+		"id": "custom/unicode/bom",
+		"yaml": "﻿a: 1\n"
+	},
+	{
+		"id": "custom/newline/crlf-error",
+		"yaml": "a: 1\r\nb: [2\r\n"
+	},
+	{
+		"id": "custom/newline/cr-only",
+		"yaml": "a: 1\rb: 2\r"
+	},
+	{
+		"id": "custom/scalar/block-chomping",
+		"yaml": "keep: |+\n  text\n\nstrip: >-\n  folded\n  lines\n\nclip: |\n  x\n"
+	},
+	{
+		"id": "custom/scalar/multiline-plain",
+		"yaml": "key: this is\n  a multi\n\n  line plain\n"
+	},
+	{
+		"id": "custom/stream/empty",
+		"yaml": ""
+	},
+	{
+		"id": "custom/stream/comments-only",
+		"yaml": "# nothing here\n"
+	},
+	{
+		"id": "custom/stream/multi",
+		"yaml": "--- 1\n--- 2\n...\n"
+	},
+	{
+		"id": "custom/error/bad-indent",
+		"yaml": "a:\n  b: 1\n c: 2\n"
+	},
+	{
+		"id": "custom/error/tab-indent",
+		"yaml": "a:\n\tb: 1\n"
+	},
+	{
+		"id": "custom/error/unknown-tag",
+		"yaml": "!foo bar\n"
+	},
+	{
+		"id": "custom/error/depth",
+		"yaml": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]\n"
+	},
+	{
+		"id": "custom/error/long-line",
+		"yaml": "key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx [\n"
+	},
+	{
+		"id": "custom/alias/shared-date",
+		"yaml": "- &d 2001-12-14\n- *d\n- [*d]\n"
+	},
+	{
+		"id": "custom/alias/shared-binary",
+		"yaml": "a: &b !!binary aGk=\nb: *b\n"
+	},
+	{
+		"id": "custom/alias/chain",
+		"yaml": "k0: &a0 [x]\nk1: &a1 [*a0]\nk2: &a2 [*a1]\nk3: &a3 [*a2]\nk4: &a4 [*a3]\nk5: &a5 [*a4]\nk6: &a6 [*a5]\nk7: &a7 [*a6]\nk8: &a8 [*a7]\nk9: &a9 [*a8]\nk10: &a10 [*a9]\nk11: &a11 [*a10]\nk12: &a12 [*a11]\nk13: &a13 [*a12]\nk14: &a14 [*a13]\nk15: &a15 [*a14]\nk16: &a16 [*a15]\nk17: &a17 [*a16]\nk18: &a18 [*a17]\nk19: &a19 [*a18]\nk20: &a20 [*a19]\nk21: &a21 [*a20]\nk22: &a22 [*a21]\nk23: &a23 [*a22]\nk24: &a24 [*a23]\nk25: &a25 [*a24]\nk26: &a26 [*a25]\nk27: &a27 [*a26]\nk28: &a28 [*a27]\nk29: &a29 [*a28]\nk30: &a30 [*a29]\nk31: &a31 [*a30]\nk32: &a32 [*a31]\nk33: &a33 [*a32]\nk34: &a34 [*a33]\nk35: &a35 [*a34]\nk36: &a36 [*a35]\nk37: &a37 [*a36]\nk38: &a38 [*a37]\nk39: &a39 [*a38]\nk40: &a40 [*a39]\nk41: &a41 [*a40]\nk42: &a42 [*a41]\nk43: &a43 [*a42]\nk44: &a44 [*a43]\nk45: &a45 [*a44]\nk46: &a46 [*a45]\nk47: &a47 [*a46]\nk48: &a48 [*a47]\nk49: &a49 [*a48]\nk50: &a50 [*a49]\nk51: &a51 [*a50]\nk52: &a52 [*a51]\nk53: &a53 [*a52]\nk54: &a54 [*a53]\nk55: &a55 [*a54]\nk56: &a56 [*a55]\nk57: &a57 [*a56]\nk58: &a58 [*a57]\nk59: &a59 [*a58]\n"
+	},
+	{
+		"id": "custom/merge/override-order",
+		"yaml": "base: &b {2: two, a: 1, 1: one}\nd:\n  z: 0\n  <<: *b\n  a: 9\n"
+	},
+	{
+		"id": "custom/keys/json-duplicate-position",
+		"yaml": "a: 1\nb: 2\na: 3\n"
+	}
+]
