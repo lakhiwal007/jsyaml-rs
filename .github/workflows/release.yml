@@ -25,7 +25,7 @@ jobs:
           - { os: macos-13, target: x86_64-apple-darwin }
           - { os: windows-latest, target: x86_64-pc-windows-msvc }
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: rustup show && rustup target add ${{ matrix.target }}
       - run: cargo build --release -p jsyaml-cli --target ${{ matrix.target }}
       - name: Package
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: rustup show
       - run: cargo publish -p jsyaml
         env:
@@ -68,7 +68,7 @@ jobs:
           - { os: windows-latest, target: x86_64-pc-windows-msvc, lib: jsyaml_node.dll }
           - { os: windows-latest, target: aarch64-pc-windows-msvc, lib: jsyaml_node.dll }
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: rustup show && rustup target add ${{ matrix.target }}
       - if: matrix.musl
         run: sudo apt-get update && sudo apt-get install -y musl-tools
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: rustup show
       - uses: actions/setup-node@v4
         with:
